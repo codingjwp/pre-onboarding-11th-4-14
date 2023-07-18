@@ -18,7 +18,7 @@ const SearchBar = ({setListOpen, setNumber, searchGetApi}: SearchBarProps) => {
     const nums = setTimeout(async() => {
       setNumber(-1);
       await searchGetApi(e.target.value);
-    }, 300);
+    }, 450);
     setTimes(nums);
   }
 
