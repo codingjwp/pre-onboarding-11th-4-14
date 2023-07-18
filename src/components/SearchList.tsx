@@ -33,7 +33,7 @@ const SearchList = ({listOpen, listData, focusIndex, searchListRef, SearchClickC
                 <SearchSvg stroke='#ACB4BB' width={32} height={32} />{item.sickNm}
               </SearchListItem>);
           })
-          : <SearchListItem key="no-serach-data"><SearchSvg stroke='#ACB4BB' width={32} height={32} /> 검색 결과가 없습니다.</SearchListItem>
+          : <SearchListItem key="no-serach-data"><SearchSvg stroke='#ACB4BB' width={32} height={32} /> 검색어 없음</SearchListItem>
           }
         </ul>
       </SearchListDetail> : null}

@@ -17,7 +17,7 @@ const SearchBar = ({setListOpen, getApiDate, searchListKeyEvent}: SearchBarProps
         type="search" id="searchbar" placeholder=' '
         onChange={getApiDate} onFocus={()=> setListOpen(true)} />
       <SearchLabel htmlFor="searchbar">
-        <SearchSvg stroke='#ACB4BB' width={32} height={32}/> 검색어가 없음
+        <SearchSvg stroke='#ACB4BB' width={32} height={32}/> 찾고 싶은 질환을 입력해주세요.
       </SearchLabel>
       <SearchBtn type='button' aria-label='Search'>
         <SearchSvg stroke='#FFFFFF' width={32} height={32}/>

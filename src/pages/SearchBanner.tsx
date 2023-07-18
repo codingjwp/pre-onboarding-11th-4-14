@@ -54,14 +54,16 @@ const SearchBanner = () => {
     setTimeIndex(index);
   }
 
+
   const searchListKeyEvent = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'KeyA'  || e.nativeEvent.isComposing) return;
     if (!(e.key === "ArrowRight" || e.key === "ArrowLeft" || e.key === "Enter")) return;
+
     const ul = document.getElementById('searchUl');
-    e.key === "ArrowRight" 
-    ? KeyEvnetFunc.ArrowRight(setFocusIndex, ul as HTMLElement)
-    : (e.key === "ArrowLeft" ? KeyEvnetFunc.ArrowLeft(setFocusIndex) 
-    : KeyEvnetFunc.Enter(e, ul as HTMLElement, setFocusIndex, SearchGetApi));
+
+    if (e.key === "ArrowRight") KeyEvnetFunc.ArrowRight(setFocusIndex, ul as HTMLElement);
+    else if (e.key === "ArrowLeft") KeyEvnetFunc.ArrowLeft(setFocusIndex);
+    else if (e.key === "Enter") KeyEvnetFunc.Enter(e, ul as HTMLElement, setFocusIndex, SearchGetApi);
   }, [setFocusIndex]);
 
   const SearchClickChoose = (e: React.MouseEvent<HTMLElement>) => {
@@ -120,11 +122,10 @@ function SearchContect(
     const enterText = ul?.childNodes[prev + 1].textContent;
     if (enterText) { 
       (e.target as HTMLInputElement).value = enterText;
-      setFocusIndex(-1);
       SearchGetApi(enterText);
     }
     return -1;
-  })
+    })
 }
 
 const SearchBannerCenter = styled.div`
