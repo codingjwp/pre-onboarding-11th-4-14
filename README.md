@@ -19,8 +19,10 @@ npm install
 npm start
 # http://localhost:4000 로 실행
 ```
-.env 생성 및 client 생성
+.env 생성(변경) 및 client 생성
 ```
+# src/api/HttpClient.tsx에 'http://localhost:4000/' 추가
+# .env 필요시 (없음면 'http://localhost:4000/')로 입력됨
 echo "VITE_API_URL='http://localhost:4000/'" > .env
 npm install
 npm start
@@ -133,7 +135,7 @@ npm start
 ### 키보드만으로 추천 검색어들로 이동 가능하도록 구현   
 ➡️ : 추천 검색어가 나왔을 때 해당 방향 키를 눌렀을 때 밑으로 이동   
 ⬅️ : 추천 검색어가 나왔을 때 해당 방향 키를 눌렀을 때 위로 이동  
-↩️ : 추천 검색어를 화살표로 이동했을 때 enter 눌렀을 때 검색바로 검색 값 등록   
+↩️ : 추천 검색어를 enter로 눌렀을 때 검색바로 검색 값 등록   
 🖱️: 추천 검색어를 클릭 하면 검색바로 검색 값 등록   
 
 한글 입력 후 첫 방향 키를 누를 경우 2번씩 실행되는 문제로 인해 추가
