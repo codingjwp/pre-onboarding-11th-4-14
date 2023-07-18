@@ -82,6 +82,7 @@ const SearchListItem = styled.li<{$targetNum?: boolean}>`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  cursor: pointer;
   &:hover {
     background-color: #80808044;
   }
