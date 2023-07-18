@@ -1,47 +1,21 @@
 import styled from 'styled-components';
 import {ReactComponent as SearchSvg} from '../assets/search.svg'
-import { ChangeEvent, Dispatch, SetStateAction, KeyboardEvent, useCallback, useState, useEffect } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, KeyboardEvent } from 'react';
 
 interface SearchBarProps {
   setListOpen: Dispatch<SetStateAction<boolean>>;
-  setNumber: Dispatch<SetStateAction<number>>;
-  SearchGetApi: (query: string) => Promise<void>;
+  getApiDate: (e: ChangeEvent<HTMLInputElement>) => void;
+  searchListKeyEvent: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const SearchBar = ({setListOpen, setNumber, SearchGetApi}: SearchBarProps) => {
-  const [times, setTimes] = useState(0);
-
-  const getApiDate = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    clearTimeout(times);
-    const nums = setTimeout(async() => {
-      setNumber(-1);
-      SearchGetApi(e.target.value);
-    }, 350);
-    setTimes(nums);
-  }
-
-  useEffect(() => {
-    return () => { clearTimeout(times) }
-  }, [])
-
-  const searchListKeyEvent = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'KeyA'  || e.nativeEvent.isComposing) return;
-    if (!(e.key === "ArrowRight" || e.key === "ArrowLeft" || e.key === "Enter")) return;
-    const ul = document.getElementById('searchUl');
-    e.key === "ArrowRight" 
-    ? KeyEvnetFunc.ArrowRight(setNumber, ul as HTMLElement)
-    : (e.key === "ArrowLeft" ? KeyEvnetFunc.ArrowLeft(setNumber) 
-    : KeyEvnetFunc.Enter(e, ul as HTMLElement, setNumber, SearchGetApi));
-  }, [setNumber]);
+const SearchBar = ({setListOpen, getApiDate, searchListKeyEvent}: SearchBarProps) => {
 
   return (
     <SearchInputGroup>
       <SearchInput
         tabIndex={0} onKeyDown={searchListKeyEvent}
         type="search" id="searchbar" placeholder=' '
-        onChange={getApiDate} onFocus={()=> setListOpen(true)}
-        onBlur={()=> setListOpen(false)} />
+        onChange={getApiDate} onFocus={()=> setListOpen(true)} />
       <SearchLabel htmlFor="searchbar">
         <SearchSvg stroke='#ACB4BB' width={32} height={32}/> 검색어가 없음
       </SearchLabel>
@@ -50,42 +24,6 @@ const SearchBar = ({setListOpen, setNumber, SearchGetApi}: SearchBarProps) => {
       </SearchBtn>
     </SearchInputGroup>
   );
-}
-
-const KeyEvnetFunc = {
-  "ArrowRight" : SearchMoveDown,
-  "ArrowLeft" : SearchMoveUp,
-  "Enter" : SearchContect,
-}
-
-function SearchMoveDown(setNumber: Dispatch<SetStateAction<number>>, ul: HTMLElement) {
-  const lastNum = (ul?.childNodes.length as number) - 1;
-  setNumber((prev) => {
-    if (prev + 1 >= lastNum) return prev
-    return prev + 1
-  });
-}
-function SearchMoveUp(setNumber: Dispatch<SetStateAction<number>>) {
-  setNumber((prev) => {
-    if (prev- 1 < 0) return prev
-    return prev - 1
-  });
-}
-function SearchContect(
-  e: KeyboardEvent<HTMLInputElement>,
-  ul: HTMLElement, 
-  setNumber: Dispatch<SetStateAction<number>>,
-  SearchGetApi: (query: string) => Promise<void>) {
-  setNumber((prev) => {
-    if (prev === -1) return -1;
-    const enterText = ul?.childNodes[prev + 1].textContent;
-    if (enterText) { 
-      (e.target as HTMLInputElement).value = enterText;
-      setNumber(-1);
-      SearchGetApi(enterText);
-    }
-    return -1;
-  })
 }
 
 const SearchInputGroup = styled.div`
