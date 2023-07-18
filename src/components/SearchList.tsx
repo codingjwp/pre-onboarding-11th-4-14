@@ -3,16 +3,16 @@ import styled from 'styled-components';
 import { SearchProps } from "../hooks/useClientGet";
 import { ReactComponent as SearchSvg } from '../assets/search.svg';
 
-
 interface SearchListProps {
   listOpen: boolean;
   listData: SearchProps | null;
-  targetNum: number;
+  focusIndex: number;
   searchListRef: MutableRefObject<HTMLUListElement | null>;
   SearchClickChoose: (e: MouseEvent<HTMLLIElement>) => void
 }
 
-const SearchList = ({listOpen, listData, targetNum, searchListRef, SearchClickChoose}: SearchListProps) => {
+const SearchList = ({listOpen, listData, focusIndex, searchListRef, SearchClickChoose}: SearchListProps) => {
+
   return (
     <>
     {listOpen ?
@@ -24,11 +24,11 @@ const SearchList = ({listOpen, listData, targetNum, searchListRef, SearchClickCh
           ? listData.data.map((item, index) => {
             return (<SearchListItem 
               tabIndex={0} 
-              $targetNum={targetNum === index} 
+              $targetNum={focusIndex === index} 
               key={item.sickCd}
               onClick={SearchClickChoose}
               ref={(el) => {
-                if (index === targetNum) el?.scrollIntoView({block: 'nearest'});
+                if (index === focusIndex) el?.scrollIntoView({block: 'nearest'});
               }}>
                 <SearchSvg stroke='#ACB4BB' width={32} height={32} />{item.sickNm}
               </SearchListItem>);
@@ -82,6 +82,7 @@ const SearchListItem = styled.li<{$targetNum?: boolean}>`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  cursor: pointer;
   &:hover {
     background-color: #80808044;
   }
