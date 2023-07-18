@@ -1,16 +1,18 @@
+import { MutableRefObject, MouseEvent } from 'react';
 import styled from 'styled-components';
 import { SearchProps } from "../hooks/useClientGet";
 import { ReactComponent as SearchSvg } from '../assets/search.svg';
-import { MutableRefObject } from 'react';
+
 
 interface SearchListProps {
   listOpen: boolean;
   listData: SearchProps | null;
   targetNum: number;
   searchListRef: MutableRefObject<HTMLUListElement | null>;
+  SearchClickChoose: (e: MouseEvent<HTMLLIElement>) => void
 }
 
-const SearchList = ({listOpen, listData, targetNum, searchListRef}: SearchListProps) => {
+const SearchList = ({listOpen, listData, targetNum, searchListRef, SearchClickChoose}: SearchListProps) => {
   return (
     <>
     {listOpen ?
@@ -24,6 +26,7 @@ const SearchList = ({listOpen, listData, targetNum, searchListRef}: SearchListPr
               tabIndex={0} 
               $targetNum={targetNum === index} 
               key={item.sickCd}
+              onClick={SearchClickChoose}
               ref={(el) => {
                 if (index === targetNum) el?.scrollIntoView({block: 'nearest'});
               }}>
@@ -61,11 +64,12 @@ const SearchListTitle = styled.li`
   color: #808080;
   text-decoration: none;
   list-style: none;
-  margin-bottom: .7rem;  
+  margin-bottom: .7rem;
 `
 
 const SearchListItem = styled.li<{$targetNum?: boolean}>`
-  display: flex;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
   justify-content: start;
   align-items: center;
   background-color: ${props => props.$targetNum ? '#80808044' : '#ffffff'}; 
@@ -74,6 +78,10 @@ const SearchListItem = styled.li<{$targetNum?: boolean}>`
   text-decoration: none;
   list-style: none;
   margin-bottom: .7rem;
+  -webkit-user-select: none; 
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   &:hover {
     background-color: #80808044;
   }

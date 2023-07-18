@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, MouseEvent } from 'react';
 import styled from 'styled-components';
 import SearchBar from "../components/SearchBar";
 import SearchList from '../components/SearchList';
@@ -15,20 +15,24 @@ const SearchBanner = () => {
   const searchListRef = useRef<HTMLUListElement | null>(null);
   const getSearchData = useSearchGet();
 
-  const searchGetApi = async (query: string) => {
+  const SearchGetApi = async (query: string) => {
     if (getSearchData) {
       const res = await getSearchData(query);
       if (res.types === 'SUCCES') setListData({types: 'SUCCES', data: res.data})
       else setListData({types: res.types, data: res.data});
     }
   }
+  const SearchClickChoose = (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation()
+    console.log("test :", e.target);
+  }
 
   return (
   <SearchBannerCenter>
     <LeftBannerSvg aria-label='left-banner-image' />
     <Searchcomponent>
-      <SearchBar setListOpen={setListOpen} searchGetApi={searchGetApi} setNumber={setNumber} />
-      <SearchList listOpen={listOpen} targetNum={number} listData={listData} searchListRef={searchListRef} />
+      <SearchBar setListOpen={setListOpen} SearchGetApi={SearchGetApi} setNumber={setNumber} />
+      <SearchList listOpen={listOpen} targetNum={number} listData={listData} searchListRef={searchListRef} SearchClickChoose={SearchClickChoose} />
     </Searchcomponent>
     <RightBannerSvg aria-label='right-banner-image' />
   </SearchBannerCenter>
