@@ -1,19 +1,91 @@
 import styled from 'styled-components';
 import {ReactComponent as SearchSvg} from '../assets/search.svg'
+import { ChangeEvent, Dispatch, SetStateAction, KeyboardEvent, useCallback, useState, useEffect } from 'react';
 
-const SearchBar = () => {
+interface SearchBarProps {
+  setListOpen: Dispatch<SetStateAction<boolean>>;
+  setNumber: Dispatch<SetStateAction<number>>;
+  SearchGetApi: (query: string) => Promise<void>;
+}
+
+const SearchBar = ({setListOpen, setNumber, SearchGetApi}: SearchBarProps) => {
+  const [times, setTimes] = useState(0);
+
+  const getApiDate = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    clearTimeout(times);
+    const nums = setTimeout(async() => {
+      setNumber(-1);
+      SearchGetApi(e.target.value);
+    }, 350);
+    setTimes(nums);
+  }
+
+  useEffect(() => {
+    return () => { clearTimeout(times) }
+  }, [])
+
+  const searchListKeyEvent = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'KeyA'  || e.nativeEvent.isComposing) return;
+    if (!(e.key === "ArrowRight" || e.key === "ArrowLeft" || e.key === "Enter")) return;
+    const ul = document.getElementById('searchUl');
+    e.key === "ArrowRight" 
+    ? KeyEvnetFunc.ArrowRight(setNumber, ul as HTMLElement)
+    : (e.key === "ArrowLeft" ? KeyEvnetFunc.ArrowLeft(setNumber) 
+    : KeyEvnetFunc.Enter(e, ul as HTMLElement, setNumber, SearchGetApi));
+  }, [setNumber]);
 
   return (
     <SearchInputGroup>
-      <SearchInput type="search" id="searchbar" placeholder=' ' />
+      <SearchInput
+        tabIndex={0} onKeyDown={searchListKeyEvent}
+        type="search" id="searchbar" placeholder=' '
+        onChange={getApiDate} onFocus={()=> setListOpen(true)}
+        onBlur={()=> setListOpen(false)} />
       <SearchLabel htmlFor="searchbar">
-        <SearchSvg stroke='#ACB4BB' width={32} height={32}/> 질환명을 입력해주세요
+        <SearchSvg stroke='#ACB4BB' width={32} height={32}/> 검색어가 없음
       </SearchLabel>
       <SearchBtn type='button' aria-label='Search'>
         <SearchSvg stroke='#FFFFFF' width={32} height={32}/>
       </SearchBtn>
     </SearchInputGroup>
   );
+}
+
+const KeyEvnetFunc = {
+  "ArrowRight" : SearchMoveDown,
+  "ArrowLeft" : SearchMoveUp,
+  "Enter" : SearchContect,
+}
+
+function SearchMoveDown(setNumber: Dispatch<SetStateAction<number>>, ul: HTMLElement) {
+  const lastNum = (ul?.childNodes.length as number) - 1;
+  setNumber((prev) => {
+    if (prev + 1 >= lastNum) return prev
+    return prev + 1
+  });
+}
+function SearchMoveUp(setNumber: Dispatch<SetStateAction<number>>) {
+  setNumber((prev) => {
+    if (prev- 1 < 0) return prev
+    return prev - 1
+  });
+}
+function SearchContect(
+  e: KeyboardEvent<HTMLInputElement>,
+  ul: HTMLElement, 
+  setNumber: Dispatch<SetStateAction<number>>,
+  SearchGetApi: (query: string) => Promise<void>) {
+  setNumber((prev) => {
+    if (prev === -1) return -1;
+    const enterText = ul?.childNodes[prev + 1].textContent;
+    if (enterText) { 
+      (e.target as HTMLInputElement).value = enterText;
+      setNumber(-1);
+      SearchGetApi(enterText);
+    }
+    return -1;
+  })
 }
 
 const SearchInputGroup = styled.div`
@@ -27,7 +99,6 @@ const SearchInputGroup = styled.div`
   border: 0;
   border-radius: 2rem;
 `
-
 const SearchInput = styled.input`
   padding: 1rem 1.5rem 1rem .4rem;
   border: 0;
@@ -41,7 +112,6 @@ const SearchInput = styled.input`
     opacity: 0;
   };
 `
-
 const SearchLabel = styled.label`
   position: absolute;
   top: .6rem;
@@ -56,7 +126,6 @@ const SearchLabel = styled.label`
   -ms-user-select: none;
   user-select: none;
 `
-
 const SearchBtn = styled.button`
   cursor: pointer;
   background-color: #007BE9;
@@ -68,7 +137,5 @@ const SearchBtn = styled.button`
   width: 3rem;
   height: 3rem;
 `
-
 export default SearchBar;
-
 
