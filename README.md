@@ -59,7 +59,7 @@ npm start
             localStorage.setItem(query, stringData);
         }
         ```
-    - localStorage 용량이 `4000KB` 이상 일 경우 삭제
+    - localStorage 용량이 `4000KB` 이상 일 경우 반 정도 삭제
         ```javascript
         // useClientGet.tsx
         function removeCachData() {
